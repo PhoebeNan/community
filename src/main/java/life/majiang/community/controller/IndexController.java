@@ -26,7 +26,7 @@ public class IndexController {
 
 
     @GetMapping("/")
-    public String index(int x){
+    public String index(){
 
         return "index";
     }
