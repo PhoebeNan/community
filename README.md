@@ -14,3 +14,19 @@ zyn
 先删除r.cer文件，然后再导入    输入密钥库口令:changeit
 keytool -delete -alias r -keystore cacerts
 keytool -import -alias r -keystore cacerts -file D://authori/r.cer
+
+## User表的SQL语句
+```sql
+create table USER
+(
+	ID INT auto_increment,
+	ACCOUNT_ID VARCHAR(100),
+	NAME VARCHAR(50),
+	TOKEN CHAR(36),
+	GMT_CREATE BIGINT,
+	GMT_MODIFIED BIGINT,
+	constraint USER_PK
+		primary key (ID)
+);
+
+```
