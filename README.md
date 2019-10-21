@@ -15,6 +15,7 @@ zyn
 keytool -delete -alias r -keystore cacerts
 keytool -import -alias r -keystore cacerts -file D://authori/r.cer
 
+<<<<<<< HEAD
 ## User表的SQL语句
 ```sql
 create table USER
@@ -30,3 +31,6 @@ create table USER
 );
 
 ```
+=======
+## 菜鸟教程
+>>>>>>> 39fb362a0cab6b50efa60b4b1e8ed6aa790fcc5b
