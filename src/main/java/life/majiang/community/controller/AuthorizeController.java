@@ -2,15 +2,17 @@ package life.majiang.community.controller;
 
 import life.majiang.community.dto.AccessTokenDto;
 import life.majiang.community.dto.GithubUserDto;
+import life.majiang.community.mapper.UserMapper;
+import life.majiang.community.model.User;
 import life.majiang.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 /**
  * @author zhaoyanan
@@ -29,9 +31,13 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirectUri;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
-                           @RequestParam(name = "state") String state) {
+                           @RequestParam(name = "state") String state,
+                            HttpServletRequest request) {
 
         AccessTokenDto accessTokenDto = new AccessTokenDto();
 
@@ -43,8 +49,26 @@ public class AuthorizeController {
 
         String accessToken = githubProvider.getAccessToken(accessTokenDto);
         System.out.println(accessToken);
-        GithubUserDto user = githubProvider.getUser(accessToken);
-        System.out.println(user.getName());
-        return "index";
+        GithubUserDto githubUserDto = githubProvider.getUser(accessToken);
+        System.out.println(githubUserDto.getName());
+        if(githubUserDto != null){
+
+            //把GitHub用户的信息存储到数据库中
+            User user = new User();
+            user.setAccountId(String.valueOf(githubUserDto.getId()));
+            user.setName(githubUserDto.getName());
+            user.setToken(UUID.randomUUID().toString());
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(user.getGmtCreate());
+
+            userMapper.insert(user);
+
+            //登录成功，写入Session和Cookie
+            request.getSession().setAttribute("user", githubUserDto);
+            return "redirect:/";
+        } else {
+          //登录失败
+            return "redirect:/";
+        }
     }
 }
