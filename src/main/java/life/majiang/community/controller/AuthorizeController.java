@@ -54,7 +54,7 @@ public class AuthorizeController {
         System.out.println(accessToken);
         GithubUserDto githubUserDto = githubProvider.getUser(accessToken);
         System.out.println(githubUserDto.getName());
-        if(githubUserDto != null){
+        if(githubUserDto != null && githubUserDto.getId() != null){
 
             //把GitHub用户的信息存储到数据库中
             User user = new User();
@@ -65,6 +65,7 @@ public class AuthorizeController {
             user.setToken(token);
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+            user.setAvatarUrl(githubUserDto.getAvatar_url());
 
             userMapper.insert(user);
 

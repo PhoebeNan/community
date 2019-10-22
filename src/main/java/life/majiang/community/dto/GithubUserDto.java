@@ -1,5 +1,6 @@
 package life.majiang.community.dto;
 
+import lombok.Data;
 import org.springframework.stereotype.Component;
 
 /**
@@ -7,33 +8,12 @@ import org.springframework.stereotype.Component;
  * @create 2019-10-16-16:20
  */
 @Component
+@Data
 public class GithubUserDto {
 
     private String name;
     private Long id;
     private String bio;
+    private String avatar_url;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
 }

@@ -12,8 +12,8 @@ zyn
 
 ## SSL异常，GitHub认证失败javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException
 先删除r.cer文件，然后再导入    输入密钥库口令:changeit
-keytool -delete -alias r -keystore cacerts
-keytool -import -alias r -keystore cacerts -file D://authori/r.cer
+keytool -delete -alias w -keystore cacerts
+keytool -import -alias w -keystore cacerts -file D://authori/w.cer
 
 ## User表的SQL语句
 ```sql
