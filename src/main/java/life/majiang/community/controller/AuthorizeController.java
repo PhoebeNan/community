@@ -65,7 +65,7 @@ public class AuthorizeController {
             user.setToken(token);
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
-            user.setAvatarUrl(githubUserDto.getAvatar_url());
+            user.setAvatarUrl(githubUserDto.getAvatarUrl());
 
             userMapper.insert(user);
 

@@ -1,13 +1,21 @@
 package life.majiang.community.controller;
 
+import life.majiang.community.dto.PaginationDto;
+import life.majiang.community.dto.QuestionDto;
+import life.majiang.community.mapper.QuestionMapper;
 import life.majiang.community.mapper.UserMapper;
+import life.majiang.community.model.Question;
 import life.majiang.community.model.User;
+import life.majiang.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author zhaoyanan
@@ -32,9 +40,16 @@ public class IndexController {
     @Autowired
     private UserMapper userMapper;
 
-    @GetMapping("/")
-    public String index(HttpServletRequest request) {
+    @Autowired
+    private QuestionService questionService;
 
+    @GetMapping("/")
+    public String index(HttpServletRequest request,
+                        Model model,
+                        @RequestParam(name = "currentPage",defaultValue = "1") Integer currentPage,
+                        @RequestParam(name = "pageSize",defaultValue = "5") Integer pageSize) {
+
+        //通过cookie查看数据库是否存在当前用户
         Cookie[] cookies = request.getCookies();
         if (cookies != null && cookies.length != 0) {
             for (Cookie cookie : cookies) {
@@ -48,6 +63,11 @@ public class IndexController {
                 }
             }
         }
+
+        //在index页面中展示问题列表
+        PaginationDto pagination = questionService.list(currentPage, pageSize);
+        model.addAttribute("pagination", pagination);
+
         return "index";
     }
 }
