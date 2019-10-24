@@ -21,6 +21,7 @@ public class PaginationDto {
     private boolean showEndPage;
     private Integer currentPage;
     private List<Integer> pages = new ArrayList<>(); //存储显示在前端页面的页码
+    private Integer totalPage; //总页数
 
     /**
      * @param totalCount  从数据库中查询出来的总条数
@@ -29,32 +30,45 @@ public class PaginationDto {
      */
     public void setPagination(Integer totalCount, Integer currentPage, Integer pageSize) {
 
+        //把参数赋值给成员变量
         this.currentPage = currentPage;
-        Integer totalPage = 0;  //总页数
+
+        //总条数/每页数据的条数=总页数
         if (totalCount % pageSize == 0) {
-            totalPage = totalCount / pageSize;
+            this.totalPage = totalCount / pageSize;
         } else {
-            totalPage = totalCount / pageSize + 1;
+            this.totalPage = totalCount / pageSize + 1;
         }
 
-        pages.add(currentPage);
+        //若传参后currentPage是不符合页面的页码时，则定位到第一页或最后一页，这俩语句必须放到“偏移量”之前
+        if (this.currentPage < 1) {
+            this.currentPage = 1;
+        }
+        if (this.currentPage > this.totalPage) {
+            this.currentPage = this.totalPage;
+        }
+
+        //把当前页添加到pages集合中
+        pages.add(this.currentPage);
+
+        //循环的把当前页的前三页和后三页添加到pages集合中，如果前面或后面不够三页，那么只添加够的
         for (int i = 1; i <= 3; i++) {
-            if (currentPage - i > 0) {
-                pages.add(0, currentPage - i);
+            if (this.currentPage - i > 0) {
+                pages.add(0, this.currentPage - i);
             }
-            if (currentPage + i <= totalPage) {
-                pages.add(currentPage + i);
+            if (this.currentPage + i <= this.totalPage) {
+                pages.add(this.currentPage + i);
             }
         }
 
         //是否展示前一页
-        if (currentPage == 1) {
+        if (this.currentPage == 1) {
             showPreviousPage = false;
         } else {
             showPreviousPage = true;
         }
         //是否展示下一页
-        if (currentPage == totalPage) {
+        if (this.currentPage == totalPage) {
             showNextPage = false;
         } else {
             showNextPage = true;
@@ -72,4 +86,5 @@ public class PaginationDto {
             showEndPage = true;
         }
     }
+
 }

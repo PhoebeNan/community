@@ -34,12 +34,18 @@ public class QuestionService {
      */
     public PaginationDto list(Integer currentPage, Integer pageSize) {
 
-        //得到偏移量
-        Integer offset = pageSize*(currentPage-1);
-        List<Question> questions = this.questionMapper.list(offset,pageSize);
-
         PaginationDto paginationDto = new PaginationDto();
         List<QuestionDto> questionDtos = new ArrayList<>();
+
+
+        Integer totalCount = this.questionMapper.count();
+        //此语句必须放在偏移量之前
+        paginationDto.setPagination(totalCount,currentPage,pageSize);
+
+        //得到偏移量
+        Integer offset = pageSize*(paginationDto.getCurrentPage()-1);
+        List<Question> questions = this.questionMapper.list(offset,pageSize);
+
 
         for (Question question : questions) {
             User user = userMapper.findUserById(question.getCreator());
@@ -52,8 +58,42 @@ public class QuestionService {
 
         //把questionDtos对象存储到paginationDto集合中
         paginationDto.setQuestionDtos(questionDtos);
-        Integer totalCount = this.questionMapper.count();
-        paginationDto.setPagination(totalCount,currentPage,pageSize);
+
         return paginationDto;
     }
+
+
+
+    public PaginationDto listUserById(Integer userId,Integer currentPage, Integer pageSize) {
+
+        PaginationDto paginationDto = new PaginationDto();
+        List<QuestionDto> questionDtos = new ArrayList<>();
+
+
+        //totalCount表示某一用户下发布问题的总条数
+        Integer totalCount = this.questionMapper.countUserById(userId);
+        //此语句必须放在偏移量之前
+        paginationDto.setPagination(totalCount,currentPage,pageSize);
+
+        //得到偏移量
+        Integer offset = pageSize*(paginationDto.getCurrentPage()-1);
+        List<Question> questions = this.questionMapper.listUserById(userId,offset,pageSize);
+
+
+        for (Question question : questions) {
+            User user = userMapper.findUserById(question.getCreator());
+            QuestionDto questionDto = new QuestionDto();
+            //questionDto.setId(question.getCreator());
+            BeanUtils.copyProperties(question, questionDto);
+            questionDto.setUser(user);
+            questionDtos.add(questionDto);
+        }
+
+        //把questionDtos对象存储到paginationDto集合中
+        paginationDto.setQuestionDtos(questionDtos);
+
+        return paginationDto;
+    }
+
+
 }

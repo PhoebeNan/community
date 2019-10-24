@@ -39,7 +39,6 @@ public class AuthorizeController {
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
-                           HttpServletRequest request,
                            HttpServletResponse response) {
 
         AccessTokenDto accessTokenDto = new AccessTokenDto();
@@ -54,7 +53,7 @@ public class AuthorizeController {
         System.out.println(accessToken);
         GithubUserDto githubUserDto = githubProvider.getUser(accessToken);
         System.out.println(githubUserDto.getName());
-        if(githubUserDto != null && githubUserDto.getId() != null){
+        if (githubUserDto != null && githubUserDto.getId() != null) {
 
             //把GitHub用户的信息存储到数据库中
             User user = new User();
@@ -74,7 +73,7 @@ public class AuthorizeController {
             //request.getSession().setAttribute("user", githubUserDto);
             return "redirect:/";
         } else {
-          //登录失败
+            //登录失败
             return "redirect:/";
         }
     }
