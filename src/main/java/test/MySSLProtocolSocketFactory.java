@@ -115,7 +115,7 @@ public class MySSLProtocolSocketFactory implements ProtocolSocketFactory {
         HttpClient http = new HttpClient();
         //https://api.github.com/user
         //https://github.com/login/oauth/access_token
-        String url = "https://github.com";
+        String url = "https://github.com/login/oauth/access_token";
         Protocol myhttps = new Protocol("https", new MySSLProtocolSocketFactory(), 443);
         Protocol.registerProtocol("https", myhttps);
         PostMethod post = new PostMethod(url);

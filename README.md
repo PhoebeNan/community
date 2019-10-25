@@ -12,8 +12,18 @@ zyn
 
 ## SSL异常，GitHub认证失败javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException
 先删除r.cer文件，然后再导入    输入密钥库口令:changeit
-keytool -delete -alias w -keystore cacerts
-keytool -import -alias w -keystore cacerts -file D://authori/w.cer
+keytool -delete -alias m -keystore cacerts
+keytool -import -alias x -keystore cacerts -file D://authori/x.cer
+
+
+https://blog.csdn.net/lhf214111967/article/details/100095980
+
+将下面的内容加入sts.ini 或者是 eclipse.ini 中
+-Djavax.net.ssl.trustStore=D:\JavaWorkSpace\Java\jre\lib\security\cacerts
+-Djava.net.ssl.trustStorePassword=changeit
+
+D:/JavaWorkSpace/Java/jre
+keytool -import -alias zz -keystore D:/JavaWorkSpace/Java/jre/lib/security/cacerts -file D://authori/zz.cer
 
 ## User表的SQL语句
 ```sql
@@ -50,7 +60,7 @@ mvn package
 ```
 5. 运行项目  
 ```sh
-java -jar target/community-0.0.1-SNAPSHOT.jar
+java -jar target/demo-0.0.1-SNAPSHOT.jar
 ```
 6. 访问项目
 ```

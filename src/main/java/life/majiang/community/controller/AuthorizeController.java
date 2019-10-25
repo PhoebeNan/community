@@ -5,18 +5,20 @@ import life.majiang.community.dto.GithubUserDto;
 import life.majiang.community.mapper.UserMapper;
 import life.majiang.community.model.User;
 import life.majiang.community.provider.GithubProvider;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.protocol.Protocol;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import test.TestSSL;
+import test.HttpsUrlValidator;
+import test.MySSLProtocolSocketFactory;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -54,18 +56,6 @@ public class AuthorizeController {
         accessTokenDto.setState(state);
 
 
-        try {
-            TestSSL.trustAllHttpsCertificates();
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                public boolean verify(String urlHostName, SSLSession session) {
-                    System.out.println("Warning: URL Host: " + urlHostName + " vs. "
-                            + session.getPeerHost());
-                    return true;
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         String accessToken = githubProvider.getAccessToken(accessTokenDto);
         System.out.println(accessToken);
