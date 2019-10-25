@@ -1,4 +1,4 @@
-package test;
+package life.majiang.community.test;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;

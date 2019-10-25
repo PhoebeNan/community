@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import test.MySSLProtocolSocketFactory;
+import life.majiang.community.test.MySSLProtocolSocketFactory;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

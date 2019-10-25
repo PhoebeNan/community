@@ -1,4 +1,4 @@
-package test;
+package life.majiang.community.test;
 
 import java.io.BufferedReader;
 import java.io.IOException;

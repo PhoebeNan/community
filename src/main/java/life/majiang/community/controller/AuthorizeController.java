@@ -5,18 +5,11 @@ import life.majiang.community.dto.GithubUserDto;
 import life.majiang.community.mapper.UserMapper;
 import life.majiang.community.model.User;
 import life.majiang.community.provider.GithubProvider;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.protocol.Protocol;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import test.HttpsUrlValidator;
-import test.MySSLProtocolSocketFactory;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
