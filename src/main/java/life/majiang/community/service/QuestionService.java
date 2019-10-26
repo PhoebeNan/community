@@ -83,7 +83,6 @@ public class QuestionService {
         for (Question question : questions) {
             User user = userMapper.findUserById(question.getCreator());
             QuestionDto questionDto = new QuestionDto();
-            questionDto.setId(question.getCreator());
             BeanUtils.copyProperties(question, questionDto);
             questionDto.setUser(user);
             questionDtos.add(questionDto);
@@ -96,4 +95,15 @@ public class QuestionService {
     }
 
 
+    public QuestionDto getQuestionById(Integer id) {
+
+        QuestionDto questionDto = new QuestionDto();
+        Question question = this.questionMapper.getQuestionById(id);
+        User user = this.userMapper.findUserById(question.getCreator());
+
+        BeanUtils.copyProperties(question, questionDto);
+        questionDto.setUser(user);
+
+        return questionDto;
+    }
 }
