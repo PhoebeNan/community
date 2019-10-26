@@ -37,15 +37,12 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model,
-                        HttpServletRequest request,
                         @RequestParam(name = "currentPage", defaultValue = "1") Integer currentPage,
                         @RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize) {
 
         //在index页面中展示问题列表
         PaginationDto pagination = questionService.list(currentPage, pageSize);
-        User user = (User) request.getSession().getAttribute("user");
         model.addAttribute("pagination", pagination);
-        model.addAttribute("user", user);
 
         return "index";
     }

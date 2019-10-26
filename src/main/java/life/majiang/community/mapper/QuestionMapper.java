@@ -34,7 +34,7 @@ public interface QuestionMapper {
                         @Param("pageSize") Integer pageSize);
 
     /**
-     * 查询所有问题(包括不同的用户)
+     * 查询所有问题总条数(包括不同的用户)
      * @return
      */
     @Select("select count(1) from question")
@@ -51,6 +51,9 @@ public interface QuestionMapper {
     List<Question> listUserById(@Param("userId") Integer userId,
                                 @Param("offset") Integer offset,
                                 @Param("pageSize") Integer pageSize);
+
+    @Select("select * from question")
+    List<Question> listQuestions();
 
     /**
      * 查询某一用户下所有的问题总条数

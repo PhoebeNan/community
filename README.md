@@ -12,8 +12,12 @@ zyn
 
 ## SSL异常，GitHub认证失败javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException
 先删除r.cer文件，然后再导入    输入密钥库口令:changeit
-keytool -delete -alias m -keystore cacerts
+keytool -delete -alias zz -keystore cacerts
 keytool -import -alias x -keystore cacerts -file D://authori/x.cer
+
+第一步：javac InstallCert.java
+第二步：java InstallCert github.com
+第三步：将生成的jssecacerts文件导入到D:/JavaWorkSpace/Java/jre/lib/security/中
 
 
 https://blog.csdn.net/lhf214111967/article/details/100095980

@@ -28,8 +28,9 @@ public class QuestionService {
 
     /**
      * 问题列表
+     *
      * @param currentPage 分页中的当前页码
-     * @param pageSize 分页中的当前页的大小，当前页有多少条数据
+     * @param pageSize    分页中的当前页的大小，当前页有多少条数据
      * @return
      */
     public PaginationDto list(Integer currentPage, Integer pageSize) {
@@ -40,17 +41,17 @@ public class QuestionService {
 
         Integer totalCount = this.questionMapper.count();
         //此语句必须放在偏移量之前
-        paginationDto.setPagination(totalCount,currentPage,pageSize);
+        paginationDto.setPagination(totalCount, currentPage, pageSize);
 
         //得到偏移量
-        Integer offset = pageSize*(paginationDto.getCurrentPage()-1);
+        Integer offset = pageSize * (paginationDto.getCurrentPage() - 1);
         List<Question> questions = this.questionMapper.list(offset,pageSize);
-
+        //List<Question> questions = this.questionMapper.listQuestions();
 
         for (Question question : questions) {
             User user = userMapper.findUserById(question.getCreator());
             QuestionDto questionDto = new QuestionDto();
-            //questionDto.setId(question.getCreator());
+            questionDto.setId(question.getCreator());
             BeanUtils.copyProperties(question, questionDto);
             questionDto.setUser(user);
             questionDtos.add(questionDto);
@@ -63,8 +64,7 @@ public class QuestionService {
     }
 
 
-
-    public PaginationDto listUserById(Integer userId,Integer currentPage, Integer pageSize) {
+    public PaginationDto listUserById(Integer userId, Integer currentPage, Integer pageSize) {
 
         PaginationDto paginationDto = new PaginationDto();
         List<QuestionDto> questionDtos = new ArrayList<>();
@@ -73,17 +73,17 @@ public class QuestionService {
         //totalCount表示某一用户下发布问题的总条数
         Integer totalCount = this.questionMapper.countUserById(userId);
         //此语句必须放在偏移量之前
-        paginationDto.setPagination(totalCount,currentPage,pageSize);
+        paginationDto.setPagination(totalCount, currentPage, pageSize);
 
         //得到偏移量
-        Integer offset = pageSize*(paginationDto.getCurrentPage()-1);
-        List<Question> questions = this.questionMapper.listUserById(userId,offset,pageSize);
+        Integer offset = pageSize * (paginationDto.getCurrentPage() - 1);
+        List<Question> questions = this.questionMapper.listUserById(userId, offset, pageSize);
 
 
         for (Question question : questions) {
             User user = userMapper.findUserById(question.getCreator());
             QuestionDto questionDto = new QuestionDto();
-            //questionDto.setId(question.getCreator());
+            questionDto.setId(question.getCreator());
             BeanUtils.copyProperties(question, questionDto);
             questionDto.setUser(user);
             questionDtos.add(questionDto);
