@@ -5,7 +5,9 @@ import life.majiang.community.dto.QuestionDto;
 import life.majiang.community.mapper.QuestionMapper;
 import life.majiang.community.mapper.UserMapper;
 import life.majiang.community.model.Question;
+import life.majiang.community.model.QuestionExample;
 import life.majiang.community.model.User;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,18 +40,16 @@ public class QuestionService {
         PaginationDto paginationDto = new PaginationDto();
         List<QuestionDto> questionDtos = new ArrayList<>();
 
-
-        Integer totalCount = this.questionMapper.count();
+        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
         //此语句必须放在偏移量之前
         paginationDto.setPagination(totalCount, currentPage, pageSize);
 
         //得到偏移量
         Integer offset = pageSize * (paginationDto.getCurrentPage() - 1);
-        List<Question> questions = this.questionMapper.list(offset,pageSize);
-        //List<Question> questions = this.questionMapper.listQuestions();
-
+        List<Question> questions = this.questionMapper
+                .selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, pageSize));
         for (Question question : questions) {
-            User user = userMapper.findUserById(question.getCreator());
+            User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDto questionDto = new QuestionDto();
             questionDto.setId(question.getCreator());
             BeanUtils.copyProperties(question, questionDto);
@@ -71,7 +71,9 @@ public class QuestionService {
 
 
         //totalCount表示某一用户下发布问题的总条数
-        Integer totalCount = this.questionMapper.countUserById(userId);
+        QuestionExample example = new QuestionExample();
+        example.createCriteria().andCreatorEqualTo(userId);
+        Integer totalCount = (int) this.questionMapper.countByExample(example);
         //此语句必须放在偏移量之前
         paginationDto.setPagination(totalCount, currentPage, pageSize);
 
@@ -81,7 +83,7 @@ public class QuestionService {
 
 
         for (Question question : questions) {
-            User user = userMapper.findUserById(question.getCreator());
+            User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDto questionDto = new QuestionDto();
             BeanUtils.copyProperties(question, questionDto);
             questionDto.setUser(user);
@@ -99,11 +101,25 @@ public class QuestionService {
 
         QuestionDto questionDto = new QuestionDto();
         Question question = this.questionMapper.getQuestionById(id);
-        User user = this.userMapper.findUserById(question.getCreator());
+        User user = this.userMapper.selectByPrimaryKey(question.getCreator());
 
         BeanUtils.copyProperties(question, questionDto);
         questionDto.setUser(user);
 
         return questionDto;
+    }
+
+    public void createOrUpdate(Question question) {
+
+        if (question.getId() == null) {
+            //创建问题
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.create(question);
+        } else {
+            //修改问题
+            question.setGmtModified(System.currentTimeMillis());
+            questionMapper.updateQuestion(question);
+        }
     }
 }
